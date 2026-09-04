@@ -50,7 +50,9 @@ def add_finding(
     severity,
     file_path,
     message,
-    recommendation
+    recommendation,
+    impact="",
+    explanation=""
 ):
 
     findings.append({
@@ -58,29 +60,15 @@ def add_finding(
         "severity": severity,
         "file": file_path,
         "message": message,
-        "recommendation": recommendation
+        "recommendation": recommendation,
+        "impact": impact,
+        "explanation": explanation
     })
 
 
-def scan_file(file_path):
+def scan_content(content, file_path="Pasted Code"):
 
     findings = []
-
-    try:
-
-        with open(
-            file_path,
-            "r",
-            encoding="utf-8",
-            errors="ignore"
-        ) as file:
-
-            content = file.read()
-
-    except Exception:
-
-        return findings
-
 
     # ------------------------------------------------
     # 1. Hardcoded Password
@@ -99,17 +87,18 @@ def scan_file(file_path):
             "Hardcoded Password",
             "High",
             file_path,
-            "A possible hardcoded password was detected.",
-            "Store passwords securely using environment variables or a secret manager."
+            "CodeSecure detected a value that appears to be a password stored directly inside the source code.",
+            "Remove the password from the source code and store it securely using environment variables or a secret-management system.",
+            "If this password is real, someone who gains access to the source code may be able to use it to access an application, database, or other service.",
+            "Passwords should generally never be permanently embedded inside application source code."
         )
-
 
     # ------------------------------------------------
     # 2. Possible API Key / Secret
     # ------------------------------------------------
 
     api_pattern = re.compile(
-        r"(api[_-]?key|secret[_-]?key)"
+        r"(api[\-_]?key|secret[\-_]?key)"
         r"\s*[:=]\s*[\"'][^\"']+[\"']",
         re.IGNORECASE
     )
@@ -118,13 +107,14 @@ def scan_file(file_path):
 
         add_finding(
             findings,
-            "Possible API Key",
+            "Possible API Key / Secret",
             "High",
             file_path,
-            "A possible API key or secret was detected in the source code.",
-            "Move sensitive credentials outside the source code."
+            "CodeSecure detected a value that appears to be an API key or secret embedded directly inside the source code.",
+            "Remove the credential from the source code. If it is real, revoke or rotate it and store the replacement securely using environment variables or a secret-management system.",
+            "An exposed API key may allow unauthorized use of connected services. Depending on its permissions, this could result in data exposure, service abuse, or unexpected costs.",
+            "Credentials inside source code can accidentally become public through GitHub repositories, website deployments, backups, or shared project files."
         )
-
 
     # ------------------------------------------------
     # 3. JavaScript eval()
@@ -141,10 +131,11 @@ def scan_file(file_path):
             "Dangerous JavaScript Function",
             "Medium",
             file_path,
-            "The eval() function was detected.",
-            "Avoid eval() when possible because it can execute dynamically supplied code."
+            "The eval() function was detected in the analyzed code.",
+            "Avoid eval() whenever possible. Use safer alternatives that do not execute dynamically supplied code.",
+            "If untrusted input reaches eval(), an attacker may potentially influence what code is executed in the application.",
+            "eval() converts a string into executable JavaScript, which makes it difficult to control and safely validate dynamic input."
         )
-
 
     # ------------------------------------------------
     # 4. innerHTML
@@ -162,9 +153,10 @@ def scan_file(file_path):
             "Medium",
             file_path,
             "Direct assignment to innerHTML was detected.",
-            "Prefer safer DOM APIs such as textContent when inserting untrusted data."
+            "When inserting untrusted text, prefer safer DOM APIs such as textContent. If HTML must be inserted, sanitize the content appropriately.",
+            "If attacker-controlled content is inserted into innerHTML without proper sanitization, malicious browser-side content may potentially be executed.",
+            "Using innerHTML is not automatically a vulnerability, but it becomes risky when the assigned value contains untrusted user-controlled data."
         )
-
 
     # ------------------------------------------------
     # 5. Possible SQL Injection
@@ -183,10 +175,11 @@ def scan_file(file_path):
             "Possible SQL Injection Risk",
             "High",
             file_path,
-            "Possible unsafe SQL query construction was detected.",
-            "Use parameterized queries or prepared statements."
+            "CodeSecure detected a pattern that may indicate SQL queries are being constructed using dynamically combined values.",
+            "Use parameterized queries or prepared statements instead of directly combining user-controlled values with SQL statements.",
+            "Unsafe SQL construction can potentially allow manipulated input to change the intended database query.",
+            "This is a pattern-based detection. CodeSecure cannot determine from this check alone whether the input is actually attacker-controlled."
         )
-
 
     # ------------------------------------------------
     # 6. HTTP instead of HTTPS
@@ -204,9 +197,10 @@ def scan_file(file_path):
             "Low",
             file_path,
             "An HTTP URL was detected instead of HTTPS.",
-            "Use HTTPS for external resources and website communication."
+            "Use HTTPS wherever possible for website communication and external resources.",
+            "HTTP does not provide the same transport protection as HTTPS, which may expose transmitted information to interception or manipulation.",
+            "Some HTTP references may be intentional or harmless, so this finding should be manually reviewed."
         )
-
 
     # ------------------------------------------------
     # 7. Debug Mode
@@ -223,12 +217,59 @@ def scan_file(file_path):
             "Debug Mode Enabled",
             "Medium",
             file_path,
-            "Debug mode appears to be enabled.",
-            "Disable debug mode before deploying the website."
+            "Debug mode appears to be enabled in the analyzed code.",
+            "Disable debug mode before deploying the website to production.",
+            "Debug configurations can sometimes expose detailed error information, application paths, configuration details, or other information that should not be visible to visitors.",
+            "Debug mode is useful during development but should normally be disabled in a production environment."
         )
 
-
     return findings
+
+
+def scan_file(file_path):
+
+    try:
+
+        with open(
+            file_path,
+            "r",
+            encoding="utf-8",
+            errors="ignore"
+        ) as file:
+
+            content = file.read()
+
+    except Exception:
+
+        return []
+
+    return scan_content(
+        content,
+        file_path
+    )
+
+
+def scan_pasted_code(code, language="Unknown"):
+
+    if not code or not code.strip():
+
+        return {
+            "files_scanned": 0,
+            "findings": [],
+            "status": "error",
+            "error": "No code was provided."
+        }
+
+    findings = scan_content(
+        code,
+        f"Pasted Code ({language})"
+    )
+
+    return {
+        "files_scanned": 1,
+        "findings": findings,
+        "status": "success"
+    }
 
 
 def scan_project(zip_path):
@@ -275,13 +316,11 @@ def scan_project(zip_path):
                     file_findings
                 )
 
-
         return {
             "files_scanned": files_scanned,
             "findings": findings,
             "status": "success"
         }
-
 
     except Exception as error:
 
@@ -291,7 +330,6 @@ def scan_project(zip_path):
             "status": "error",
             "error": str(error)
         }
-
 
     finally:
 

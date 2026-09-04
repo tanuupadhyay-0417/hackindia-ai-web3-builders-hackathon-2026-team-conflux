@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>CodeSecure | Website Security Scanner</title>
+    <title>AI CodeSecure | Website Security Scanner</title>
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -20,33 +22,47 @@
             min-height: 100vh;
         }
 
+        /* =========================
+           NAVBAR
+        ========================= */
+
         .navbar {
             width: 100%;
-            padding: 22px 8%;
+            padding: 20px 8%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #1c2a3a;
+            background: #07111f;
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 25px;
             font-weight: bold;
             color: #38bdf8;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: white;
         }
 
         .nav-badge {
-            padding: 8px 14px;
+            padding: 8px 15px;
             border: 1px solid #1e3a52;
             border-radius: 20px;
             color: #9caec2;
             font-size: 13px;
         }
 
+        /* =========================
+           HERO
+        ========================= */
+
         .hero {
             max-width: 1100px;
             margin: auto;
-            padding: 80px 25px 50px;
+            padding: 75px 25px 50px;
             text-align: center;
         }
 
@@ -66,25 +82,83 @@
             margin-bottom: 22px;
         }
 
-        h1 span {
+        h1 .ai {
+            color: #38bdf8;
+        }
+
+        h1 .secure {
+            color: white;
+        }
+
+        h1 .tagline {
             color: #38bdf8;
         }
 
         .subtitle {
-            max-width: 720px;
+            max-width: 750px;
             margin: auto;
             color: #9caec2;
             font-size: 18px;
             line-height: 1.7;
         }
 
-        .upload-box {
-            max-width: 650px;
+        /* =========================
+           SCANNER BOX
+        ========================= */
+
+        .scanner-box {
+            max-width: 780px;
             margin: 45px auto 0;
-            padding: 45px;
-            border: 1px dashed #31506b;
+            padding: 35px;
+            border: 1px solid #263d53;
             border-radius: 18px;
             background: #0b1929;
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.05);
+        }
+
+        /* =========================
+           TABS
+        ========================= */
+
+        .scanner-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #31506b;
+            background: #0d1c2d;
+            color: #9caec2;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: #13283b;
+        }
+
+        .tab-btn.active {
+            background: #38bdf8;
+            color: #04111c;
+            border-color: #38bdf8;
+        }
+
+        /* =========================
+           SCANNER SECTIONS
+        ========================= */
+
+        .scanner-section {
+            display: none;
+        }
+
+        .scanner-section.active {
+            display: block;
         }
 
         .upload-icon {
@@ -92,14 +166,19 @@
             margin-bottom: 15px;
         }
 
-        .upload-box h2 {
+        .scanner-section h2 {
             margin-bottom: 10px;
         }
 
-        .upload-box p {
+        .scanner-section p {
             color: #8fa2b5;
             margin-bottom: 25px;
+            line-height: 1.6;
         }
+
+        /* =========================
+           FILE UPLOAD
+        ========================= */
 
         .file-input {
             display: none;
@@ -128,6 +207,63 @@
             min-height: 18px;
         }
 
+        /* =========================
+           CODE TEXTAREA
+        ========================= */
+
+        .code-textarea {
+            width: 100%;
+            min-height: 280px;
+            resize: vertical;
+            background: #06101d;
+            border: 1px solid #29445c;
+            border-radius: 10px;
+            padding: 18px;
+            color: #dbeafe;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            outline: none;
+        }
+
+        .code-textarea:focus {
+            border-color: #38bdf8;
+        }
+
+        .code-textarea::placeholder {
+            color: #60758a;
+        }
+
+        /* =========================
+           LANGUAGE
+        ========================= */
+
+        .language-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            margin-bottom: 18px;
+        }
+
+        .language-select {
+            flex: 1;
+            background: #0d1c2d;
+            border: 1px solid #31506b;
+            color: #dbeafe;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .language-select:focus {
+            border-color: #38bdf8;
+        }
+
+        /* =========================
+           SCAN BUTTON
+        ========================= */
+
         .scan-btn {
             background: #38bdf8;
             color: #04111c;
@@ -137,11 +273,17 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
         }
 
         .scan-btn:hover {
             opacity: 0.85;
+            transform: translateY(-1px);
         }
+
+        /* =========================
+           SECURITY NOTE
+        ========================= */
 
         .security-note {
             margin-top: 18px;
@@ -149,9 +291,13 @@
             font-size: 12px;
         }
 
+        /* =========================
+           FEATURES
+        ========================= */
+
         .features {
-            max-width: 1000px;
-            margin: 30px auto 80px;
+            max-width: 1100px;
+            margin: 30px auto 60px;
             padding: 0 25px;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -163,10 +309,22 @@
             border: 1px solid #1c2a3a;
             border-radius: 14px;
             padding: 25px;
+            transition: 0.2s;
+        }
+
+        .feature:hover {
+            border-color: #31506b;
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            font-size: 30px;
+            margin-bottom: 12px;
         }
 
         .feature h3 {
             margin-bottom: 10px;
+            color: #dbeafe;
         }
 
         .feature p {
@@ -175,6 +333,147 @@
             line-height: 1.6;
         }
 
+        /* =========================
+           ADVANTAGES
+        ========================= */
+
+        .advantages {
+            max-width: 1100px;
+            margin: 0 auto 60px;
+            padding: 0 25px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title h2 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #8497aa;
+        }
+
+        .advantage-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .advantage {
+            background: #0b1929;
+            border: 1px solid #1c2a3a;
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .advantage h3 {
+            color: #38bdf8;
+            margin-bottom: 8px;
+        }
+
+        .advantage p {
+            color: #8497aa;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           TEAM SECTION
+        ========================= */
+
+        .team-section {
+            max-width: 1100px;
+            margin: 0 auto 60px;
+            padding: 0 25px;
+        }
+
+        .team-card {
+            background: linear-gradient(
+                135deg,
+                #0b1929,
+                #0d2134
+            );
+            border: 1px solid #31506b;
+            border-radius: 18px;
+            padding: 35px;
+            text-align: center;
+        }
+
+        .team-icon {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .team-card h2 {
+            color: #38bdf8;
+            margin-bottom: 10px;
+        }
+
+        .team-card .team-size {
+            color: #dbeafe;
+            font-size: 17px;
+            margin-bottom: 20px;
+        }
+
+        .leader-box {
+            display: inline-block;
+            padding: 18px 30px;
+            background: #07111f;
+            border: 1px solid #29445c;
+            border-radius: 12px;
+        }
+
+        .leader-label {
+            display: block;
+            color: #8497aa;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 7px;
+        }
+
+        .leader-name {
+            font-size: 21px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* =========================
+           CTA
+        ========================= */
+
+        .cta {
+            max-width: 1050px;
+            margin: 0 auto 50px;
+            padding: 35px 25px;
+            text-align: center;
+            border: 1px solid #31506b;
+            border-radius: 18px;
+            background: #0b1929;
+        }
+
+        .cta h2 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .cta h2 span {
+            color: #38bdf8;
+        }
+
+        .cta p {
+            color: #8497aa;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
         footer {
             text-align: center;
             padding: 25px;
@@ -182,6 +481,14 @@
             color: #64778b;
             font-size: 13px;
         }
+
+        footer strong {
+            color: #38bdf8;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
 
         @media (max-width: 700px) {
 
@@ -193,19 +500,63 @@
                 grid-template-columns: 1fr;
             }
 
-            .upload-box {
-                padding: 30px 20px;
+            .advantage-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scanner-box {
+                padding: 25px 18px;
+            }
+
+            .scanner-tabs {
+                flex-direction: column;
+            }
+
+            .language-row {
+                flex-direction: column;
+            }
+
+            .navbar {
+                padding: 18px 5%;
+            }
+
+            .nav-badge {
+                font-size: 10px;
+                padding: 7px 10px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .hero {
+                padding-top: 55px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .leader-name {
+                font-size: 17px;
             }
         }
+
     </style>
 </head>
 
+
 <body>
+
+
+    <!-- =========================
+         NAVBAR
+    ========================= -->
 
     <nav class="navbar">
 
         <div class="logo">
-            🛡 CodeSecure
+            🛡 <span class="ai">AI</span> CodeSecure
         </div>
 
         <div class="nav-badge">
@@ -215,72 +566,272 @@
     </nav>
 
 
+    <!-- =========================
+         HERO
+    ========================= -->
+
     <section class="hero">
 
         <div class="tag">
-            🔐 Security Verification for Freelance Websites
+            🔐 AI-Powered Security Verification for Websites
         </div>
 
 
         <h1>
-            Verify the Code.<br>
-            <span>Protect the Business.</span>
+
+            <span class="ai">AI</span>
+            <span class="secure"> CodeSecure</span>
+            <br>
+
+            <span class="tagline">
+                Verify the Code. Protect the Business.
+            </span>
+
         </h1>
 
 
         <p class="subtitle">
-            CodeSecure analyzes website source code for security
-            vulnerabilities, exposed secrets, suspicious scripts and
-            risky dependencies before your website goes live.
+
+            AI CodeSecure analyzes website source code for
+            common security vulnerabilities, exposed secrets,
+            suspicious scripts and risky configurations before
+            your website goes live.
+
         </p>
 
 
-        <!-- UPLOAD FORM -->
+        <!-- =========================
+             SCANNER BOX
+        ========================= -->
 
-        <div class="upload-box">
-
-            <div class="upload-icon">
-                📁
-            </div>
-
-            <h2>
-                Scan Your Website
-            </h2>
-
-            <p>
-                Upload your website project as a ZIP file to begin.
-            </p>
+        <div class="scanner-box">
 
 
-            <form action="/upload" method="POST" enctype="multipart/form-data">
+            <!-- TABS -->
 
-                <label for="project" class="choose-btn">
-                    📂 Choose Website ZIP
-                </label>
+            <div class="scanner-tabs">
 
-                <input
-                    type="file"
-                    id="project"
-                    name="project"
-                    class="file-input"
-                    accept=".zip"
-                    required
+                <button
+                    type="button"
+                    class="tab-btn active"
+                    onclick="showScanner('uploadScanner', this)"
                 >
-
-                <span id="fileName" class="file-name">
-                    No file selected
-                </span>
-
-
-                <button type="submit" class="scan-btn">
-                    🔍 Start Security Scan
+                    📦 Upload Project
                 </button>
 
-            </form>
+
+                <button
+                    type="button"
+                    class="tab-btn"
+                    onclick="showScanner('codeScanner', this)"
+                >
+                    📝 Paste Code
+                </button>
+
+            </div>
+
+
+            <!-- =========================
+                 ZIP SCANNER
+            ========================= -->
+
+            <div
+                id="uploadScanner"
+                class="scanner-section active"
+            >
+
+                <div class="upload-icon">
+                    📁
+                </div>
+
+
+                <h2>
+                    Scan Your Website
+                </h2>
+
+
+                <p>
+                    Upload your website project as a ZIP file
+                    to analyze multiple source files.
+                </p>
+
+
+                <form
+                    action="/upload"
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+
+                    <label
+                        for="project"
+                        class="choose-btn"
+                    >
+                        📂 Choose Website ZIP
+                    </label>
+
+
+                    <input
+                        type="file"
+                        id="project"
+                        name="project"
+                        class="file-input"
+                        accept=".zip"
+                        required
+                    >
+
+
+                    <span
+                        id="fileName"
+                        class="file-name"
+                    >
+                        No file selected
+                    </span>
+
+
+                    <button
+                        type="submit"
+                        class="scan-btn"
+                    >
+                        🔍 Start Security Scan
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- =========================
+                 PASTE CODE SCANNER
+            ========================= -->
+
+            <div
+                id="codeScanner"
+                class="scanner-section"
+            >
+
+                <div class="upload-icon">
+                    📝
+                </div>
+
+
+                <h2>
+                    Analyze Your Code
+                </h2>
+
+
+                <p>
+                    Paste your source code below and
+                    AI CodeSecure will check it for common
+                    security risks.
+                </p>
+
+
+                <form
+                    action="/scan-code"
+                    method="POST"
+                >
+
+                    <textarea
+                        name="code"
+                        class="code-textarea"
+                        placeholder="// Paste your code here...
+
+Example:
+
+const apiKey = &quot;YOUR_KEY_HERE&quot;;
+
+function loadData() {
+    return fetch(&quot;http://example.com/data&quot;);
+}"
+                        required
+                    ></textarea>
+
+
+                    <div class="language-row">
+
+                        <select
+                            name="language"
+                            class="language-select"
+                            required
+                        >
+
+                            <option value="">
+                                Select Programming Language
+                            </option>
+
+                            <option value="HTML">
+                                HTML
+                            </option>
+
+                            <option value="CSS">
+                                CSS
+                            </option>
+
+                            <option value="JavaScript">
+                                JavaScript
+                            </option>
+
+                            <option value="TypeScript">
+                                TypeScript
+                            </option>
+
+                            <option value="Python">
+                                Python
+                            </option>
+
+                            <option value="PHP">
+                                PHP
+                            </option>
+
+                            <option value="Java">
+                                Java
+                            </option>
+
+                            <option value="C">
+                                C
+                            </option>
+
+                            <option value="C++">
+                                C++
+                            </option>
+
+                            <option value="C#">
+                                C#
+                            </option>
+
+                            <option value="SQL">
+                                SQL
+                            </option>
+
+                            <option value="JSON">
+                                JSON
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="scan-btn"
+                    >
+                        🔍 Scan Pasted Code
+                    </button>
+
+                </form>
+
+            </div>
 
 
             <div class="security-note">
-                🔒 Privacy-first security analysis
+
+                🔒 Code is analyzed as text and is not executed.
+
             </div>
 
         </div>
@@ -288,17 +839,26 @@
     </section>
 
 
+    <!-- =========================
+         FEATURES
+    ========================= -->
+
     <section class="features">
+
 
         <div class="feature">
 
+            <div class="feature-icon">
+                🔍
+            </div>
+
             <h3>
-                🔍 Vulnerability Detection
+                Vulnerability Detection
             </h3>
 
             <p>
                 Identify common security weaknesses
-                in website source code.
+                in website source code before deployment.
             </p>
 
         </div>
@@ -306,8 +866,12 @@
 
         <div class="feature">
 
+            <div class="feature-icon">
+                🔑
+            </div>
+
             <h3>
-                🔑 Secret Detection
+                Secret Detection
             </h3>
 
             <p>
@@ -320,8 +884,12 @@
 
         <div class="feature">
 
+            <div class="feature-icon">
+                🤖
+            </div>
+
             <h3>
-                🤖 AI Risk Analysis
+                AI Risk Analysis
             </h3>
 
             <p>
@@ -332,38 +900,261 @@
 
         </div>
 
+
     </section>
 
 
+    <!-- =========================
+         ADVANTAGES
+    ========================= -->
+
+    <section class="advantages">
+
+        <div class="section-title">
+
+            <h2>
+                Why Choose <span style="color:#38bdf8;">
+                    AI CodeSecure
+                </span>?
+            </h2>
+
+            <p>
+                Security verification made simple for developers,
+                freelancers and business owners.
+            </p>
+
+        </div>
+
+
+        <div class="advantage-grid">
+
+
+            <div class="advantage">
+
+                <h3>
+                    🛡 Prevent Security Risks
+                </h3>
+
+                <p>
+                    Detect common security-risk patterns
+                    before a website is deployed to production.
+                </p>
+
+            </div>
+
+
+            <div class="advantage">
+
+                <h3>
+                    ⚡ Save Time & Effort
+                </h3>
+
+                <p>
+                    Automated source-code analysis helps reduce
+                    the time required for manual security review.
+                </p>
+
+            </div>
+
+
+            <div class="advantage">
+
+                <h3>
+                    👨‍💻 Freelancer Friendly
+                </h3>
+
+                <p>
+                    Freelancers can use CodeSecure as an additional
+                    verification step before delivering websites
+                    to clients.
+                </p>
+
+            </div>
+
+
+            <div class="advantage">
+
+                <h3>
+                    📊 Easy Security Reports
+                </h3>
+
+                <p>
+                    Receive a simple security score, severity levels,
+                    explanations and recommended actions.
+                </p>
+
+            </div>
+
+
+            <div class="advantage">
+
+                <h3>
+                    🔒 Privacy-Focused
+                </h3>
+
+                <p>
+                    The prototype analyzes submitted code as text
+                    and does not execute the uploaded source code.
+                </p>
+
+            </div>
+
+
+            <div class="advantage">
+
+                <h3>
+                    💼 Business Protection
+                </h3>
+
+                <p>
+                    Helps non-technical business owners understand
+                    potential security concerns before going live.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CTA
+    ========================= -->
+
+    <section class="cta">
+
+        <h2>
+            <span>VERIFY THE CODE.</span>
+            <br>
+            PROTECT THE BUSINESS.
+        </h2>
+
+        <p>
+            AI CodeSecure helps developers and businesses
+            identify common security risks and make informed
+            decisions before launching a website.
+        </p>
+
+    </section>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
     <footer>
 
-        © 2026 CodeSecure — Website Security Verification Platform
+        © 2026
+        <strong>AI CodeSecure</strong>
+        — Website Security Verification Platform
+
+        <br><br>
+
+        Team Tech Forse 5 |
+        Team Leader: NISHANT RAMAN AGARWAL |
+        5 Members
 
     </footer>
 
 
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
     <script>
 
-        const fileInput = document.getElementById("project");
-        const fileName = document.getElementById("fileName");
 
-        fileInput.addEventListener("change", function () {
+        /* =========================
+           FILE NAME DISPLAY
+        ========================= */
 
-            if (this.files.length > 0) {
+        const fileInput =
+            document.getElementById("project");
 
-                fileName.textContent =
-                    "Selected: " + this.files[0].name;
 
-            } else {
+        const fileName =
+            document.getElementById("fileName");
 
-                fileName.textContent =
-                    "No file selected";
+
+        fileInput.addEventListener(
+            "change",
+            function () {
+
+                if (this.files.length > 0) {
+
+                    fileName.textContent =
+                        "Selected: " +
+                        this.files[0].name;
+
+                } else {
+
+                    fileName.textContent =
+                        "No file selected";
+
+                }
 
             }
+        );
 
-        });
+
+        /* =========================
+           SWITCH BETWEEN SCANNERS
+        ========================= */
+
+        function showScanner(
+            scannerId,
+            button
+        ) {
+
+            const sections =
+                document.querySelectorAll(
+                    ".scanner-section"
+                );
+
+
+            sections.forEach(
+                function(section) {
+
+                    section.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            const buttons =
+                document.querySelectorAll(
+                    ".tab-btn"
+                );
+
+
+            buttons.forEach(
+                function(btn) {
+
+                    btn.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            document
+                .getElementById(scannerId)
+                .classList.add("active");
+
+
+            button.classList.add("active");
+
+        }
+
 
     </script>
 
+
 </body>
+
 </html>
